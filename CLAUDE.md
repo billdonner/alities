@@ -28,6 +28,7 @@ There is NO runnable code in this repo. All executable work happens in the satel
 - **Chain operations.** Run tests across all repos, commit, push, regenerate openapi — do it all in one flow.
 - **Show results as tables.** Summaries, checklists, and gap analyses should use markdown tables.
 - **Keep docs in sync with code.** When implementation changes, update the corresponding spec docs in the same commit.
+- **On session start**, print the current working directory and all associated repos in the ecosystem as a table.
 
 ## Test Suites
 
