@@ -7,7 +7,7 @@ Alities is a trivia-based design and development environment that generates a va
 | Repo | Path | Purpose |
 |------|------|---------|
 | **alities** | `~/alities` | Specs, documentation, orchestration hub |
-| **alities-engine** | `~/alities-engine` | Python game engine & API server (source of truth for API) |
+| **alities-engine** | `~/alities-engine` | Swift trivia content engine (gen-daemon + profile, source of truth) |
 | **alities-studio** | `~/alities-studio` | React/TypeScript game designer & player web app |
 | **alities-mobile** | `~/alities-mobile` | SwiftUI iOS game player app |
 
@@ -33,7 +33,7 @@ There is NO runnable code in this repo. All executable work happens in the satel
 
 | Repo | Tests | Command |
 |------|-------|---------|
-| alities-engine | 0 | `cd ~/alities-engine && uv run pytest` |
+| alities-engine | 0 | `cd ~/alities-engine && swift test` |
 | alities-studio | 0 | `cd ~/alities-studio && npx vitest run` |
 | alities-mobile | 0 | `cd ~/alities-mobile && xcodebuild test -project Alities.xcodeproj -scheme Alities -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5'` |
 | **Total** | **0** | |
