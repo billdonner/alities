@@ -47,7 +47,7 @@ Game templates define reusable game formats. A template specifies the rules, sco
 | `flat` | Random difficulty throughout |
 | `linear` | Steadily increasing difficulty |
 | `wave` | Alternating easy/hard clusters |
-| `adaptive` | Adjusts based on player performance mid-game |
+| `adaptive` | At generation time, uses `flat` ordering; during gameplay, dynamically adjusts upcoming question difficulty based on player performance |
 
 ## Template Lifecycle
 

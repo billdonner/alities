@@ -25,4 +25,4 @@ Master index of all spec and design documents.
 
 | Document | Description |
 |----------|-------------|
-| *(none yet)* | |
+| [CODE_REVIEW_2026-02-19.md](CODE_REVIEW_2026-02-19.md) | Comprehensive ecosystem review |

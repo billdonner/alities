@@ -1,34 +1,24 @@
-Regenerate the API client after alities-engine changes and check for iOS drift.
+Check for API and model drift across all 3 Alities repos.
+
+The engine is a Swift CLI with an internal NIO control server (port 9847). There is no OpenAPI spec generation — sync is done by comparing source code directly.
 
 ## Steps
 
-1. **Regenerate OpenAPI spec** from the engine:
-   ```bash
-   cd ~/alities-engine && uv run python -c "
-   from alities.server.main import create_app
-   import json
-   app = create_app()
-   print(json.dumps(app.openapi(), indent=2))
-   " > docs/openapi.json
-   ```
+1. **Inventory engine HTTP endpoints**: Read `~/alities-engine/Sources/AlitiesEngine/Services/ControlServer.swift` and list all HTTP routes (method, path, description).
 
-2. **Copy to alities-studio**:
-   ```bash
-   cp ~/alities-engine/docs/openapi.json ~/alities-studio/openapi.json
-   ```
+2. **Check studio API client**: Search `~/alities-studio/src/` for any fetch calls, API URLs, or endpoint references. Compare against the engine's actual endpoints.
 
-3. **Regenerate TypeScript client**:
-   ```bash
-   cd ~/alities-studio && npm run api:generate
-   ```
+3. **Check mobile model structs**: Read `~/alities-mobile/` for model structs (e.g., `GameModels.swift`, `TriviaQuestion.swift`, or similar). Compare field names and types against the engine's models in `~/alities-engine/Sources/AlitiesEngine/Models/`.
 
-4. **Check iOS model drift**: Compare the OpenAPI spec against:
-   - `~/alities-mobile/Alities/Services/APIEndpoint.swift`
-   - `~/alities-mobile/Alities/Models/*.swift`
+4. **Report drift table**:
 
-   Report any endpoints or model fields present in the spec but missing from iOS, or vice versa.
+   | Area | Engine | Studio | Mobile | Status |
+   |------|--------|--------|--------|--------|
+   | Control endpoints | ... | ... | ... | aligned / drifted / missing |
+   | Question model | ... | ... | ... | aligned / drifted / missing |
+   | GameData model | ... | ... | ... | aligned / drifted / missing |
 
-5. **Run alities-studio tests** to verify the regenerated client:
+5. **Run studio tests** to verify nothing is broken:
    ```bash
    cd ~/alities-studio && npx vitest run
    ```
@@ -39,9 +29,9 @@ Regenerate the API client after alities-engine changes and check for iOS drift.
 
    | Step | Status |
    |------|--------|
-   | OpenAPI regenerated | ... |
-   | TS client regenerated | ... |
-   | iOS drift check | ... |
+   | Engine endpoints inventoried | ... |
+   | Studio API drift check | ... |
+   | Mobile model drift check | ... |
    | Studio tests | ... |
 
 $ARGUMENTS

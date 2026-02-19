@@ -16,7 +16,7 @@ question_score = base_points × speed_bonus × streak_multiplier - hint_penalty
 |-----------|---------|-------------|
 | **Base points** | Template `points_correct` (default 100) | Awarded for correct answer |
 | **Speed bonus** | `1.0 + (time_remaining / time_limit) × 0.5` | Up to 1.5x for fast answers |
-| **Streak multiplier** | `min(streak × template.streak_multiplier, 3.0)` | Capped at 3x |
+| **Streak multiplier** | `min(max(streak - 1, 0) × template.streak_multiplier + 1.0, 3.0)` | No bonus on 1st correct; grows from 2nd onward, capped at 3x |
 | **Hint penalty** | `template.hint_cost_points × hints_used` | Deducted per hint used on this question |
 | **Wrong answer** | `template.points_wrong` (default 0) | Usually 0, but templates can set negative |
 

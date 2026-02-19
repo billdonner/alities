@@ -3,31 +3,33 @@
 ## System Overview
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  alities-studio │     │ alities-mobile   │     │  (future CLIs)   │
-│  React/TS       │     │ SwiftUI/iOS      │     │                  │
-└────────┬────────┘     └────────┬─────────┘     └────────┬─────────┘
-         │                       │                         │
-         └───────────┬───────────┴─────────────────────────┘
-                     │ HTTPS / REST
+┌─────────────────┐     ┌──────────────────┐
+│  alities-studio │     │ alities-mobile   │
+│  React/TS       │     │ SwiftUI/iOS      │
+└────────┬────────┘     └────────┬─────────┘
+         │                       │
+         └───────────┬───────────┘
+                     │ (offline / local data)
               ┌──────┴──────┐
               │  alities-   │
               │  engine     │
-              │  FastAPI    │
+              │  Swift CLI  │
               ├─────────────┤
-              │  Game Gen   │
-              │  Scoring    │
-              │  Content    │
+              │  Daemon     │
+              │  Providers  │
+              │  Profile    │
               └──────┬──────┘
                      │
-         ┌───────────┼───────────┐
-         │           │           │
-    ┌────┴────┐ ┌────┴────┐ ┌───┴────┐
-    │ Postgres│ │  Redis  │ │ S3/Obj │
-    │ (data)  │ │ (cache, │ │ (media)│
-    │         │ │  scores)│ │        │
-    └─────────┘ └─────────┘ └────────┘
+              ┌──────┼──────┐
+              │             │
+         ┌────┴────┐  ┌────┴────┐
+         │ Postgres│  │ SQLite  │
+         │ (daemon │  │ (profile│
+         │  mode)  │  │  mode)  │
+         └─────────┘  └─────────┘
 ```
+
+The engine is a **CLI-first** tool. The daemon mode runs a background acquisition loop with a lightweight NIO HTTP control server on port 9847 (localhost only). Studio and mobile consume exported game data files — they do not call the engine's HTTP endpoints directly.
 
 ## Data Model
 
@@ -54,27 +56,30 @@ Player ──plays──> GameSession ──of──> GameInstance
 
 ## Service Boundaries
 
-| Service | Responsibility |
-|---------|---------------|
-| **Content Service** | CRUD for templates, topic packs, questions; import/export |
-| **Generation Service** | Combines template + packs into game instances; question selection algorithm |
-| **Play Service** | Game session management, real-time scoring, hint dispensing |
-| **Analytics Service** | Player stats, leaderboards, question difficulty calibration |
-| **Auth Service** | Registration, login, JWT tokens, roles |
+| Module | Location | Responsibility |
+|--------|----------|---------------|
+| **Commands/** | `Sources/AlitiesEngine/Commands/` | CLI subcommands (run, import, export, report, stats, etc.) |
+| **Services/** | `Sources/AlitiesEngine/Services/` | Daemon, PostgreSQL ops, control server, game data transformer |
+| **Providers/** | `Sources/AlitiesEngine/Providers/` | Trivia acquisition from 5 sources (OpenTriviaDB, TheTriviaAPI, jService, AI Generator, File Import) |
+| **Profile/** | `Sources/AlitiesEngine/Profile/` | SQLite/GRDB operations, category normalization |
+| **Models/** | `Sources/AlitiesEngine/Models/` | TriviaQuestion, GameData, ProfileModels, Report |
 
 ## API Contract
 
-- OpenAPI spec generated from alities-engine (source of truth)
-- TypeScript client auto-generated via orval for alities-studio
-- iOS models manually synced; drift checked by `/sync-api` skill
+The engine is **CLI-first**. The primary interface is CLI subcommands (`run`, `import`, `export`, `report`, `stats`, `categories`, etc.).
+
+In daemon mode (`run`), an internal NIO HTTP control server listens on `127.0.0.1:9847` with operational endpoints (`/status`, `/harvest`, `/pause`, `/resume`, `/stop`, `/import`, `/categories`). These are for daemon control only, not for serving game content to clients.
+
+Studio and mobile consume **exported JSON files** (GameData format), not live API calls. Cross-project sync is done by comparing model structs and data formats in source code — there is no OpenAPI spec generation.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| API Server | Python 3.12, FastAPI, SQLAlchemy (async), PostgreSQL |
-| Cache/Realtime | Redis |
-| Web Client | React, TypeScript, Vite |
-| Mobile Client | SwiftUI, Swift 6, iOS 17+ |
-| Project Gen (iOS) | xcodegen |
-| Package Mgmt | uv (Python), npm (JS), SPM (Swift) |
+| Engine CLI/Daemon | Swift 5.9+, SPM, ArgumentParser |
+| Daemon DB | PostgreSQL (PostgresNIO) |
+| Profile DB | SQLite (GRDB) |
+| HTTP Control | SwiftNIO |
+| Web Client | React 19, TypeScript, Vite |
+| Mobile Client | SwiftUI, iOS 17+, SPM |
+| Package Mgmt | SPM (Swift), npm (JS) |

@@ -9,9 +9,9 @@ Test all, commit dirty repos, and push everything.
    - `cd ~/alities-mobile && git status`
 
 2. **Run all 3 test suites** in parallel:
-   - `cd ~/alities-engine && uv run pytest`
+   - `cd ~/alities-engine && swift test`
    - `cd ~/alities-studio && npx vitest run`
-   - `cd ~/alities-mobile && xcodebuild test -project Alities.xcodeproj -scheme Alities -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5'`
+   - `cd ~/alities-mobile && swift test`
 
 3. **If ANY test suite fails — STOP.** Report the failures and do NOT commit or push anything.
 

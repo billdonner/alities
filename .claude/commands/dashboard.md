@@ -2,15 +2,22 @@ Show ecosystem stats: working directory, lines of code, test counts, and git sta
 
 ## Instructions
 
-1. **Run a single Bash command** that gathers all stats at once:
+1. **Gather stats in parallel** using separate Bash calls for each repo:
 
-```bash
-echo "CWD:$(pwd):$(git branch --show-current 2>/dev/null || echo 'no-git')" && echo "SRC_ENGINE:$(find ~/alities-engine/Sources -name '*.swift' | xargs wc -l | tail -1 | awk '{print $1}')" && echo "TST_ENGINE:$(find ~/alities-engine/Tests -name '*.swift' | xargs wc -l | tail -1 | awk '{print $1}')" && echo "SRC_STUDIO:$(find ~/alities-studio/src \( -name '*.ts' -o -name '*.tsx' \) ! -path '*__tests__*' | xargs wc -l | tail -1 | awk '{print $1}')" && echo "TST_STUDIO:$(find ~/alities-studio/src -path '*__tests__*' \( -name '*.ts' -o -name '*.tsx' \) 2>/dev/null | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1+0}')" && echo "SRC_MOBILE:$(find ~/alities-mobile -path '*/Sources/*.swift' | xargs wc -l | tail -1 | awk '{print $1}')" && echo "TST_MOBILE:$(find ~/alities-mobile -path '*/Tests/*.swift' | xargs wc -l | tail -1 | awk '{print $1}')" && echo "GIT_HUB:$(cd ~/alities && git status --porcelain | wc -l | awk '{print ($1==0)?"clean":"dirty"}')" && echo "GIT_ENGINE:$(cd ~/alities-engine && git status --porcelain | wc -l | awk '{print ($1==0)?"clean":"dirty"}')" && echo "GIT_STUDIO:$(cd ~/alities-studio && git status --porcelain | wc -l | awk '{print ($1==0)?"clean":"dirty"}')" && echo "GIT_MOBILE:$(cd ~/alities-mobile && git status --porcelain | wc -l | awk '{print ($1==0)?"clean":"dirty"}')" && for f in ~/alities/.claude/commands/*.md; do echo "SKILL:$(basename "$f" .md):$(head -1 "$f")"; done
-```
+   - Current working directory and branch: `pwd` and `git branch --show-current`
+   - Engine source LoC: `find ~/alities-engine/Sources -name '*.swift' | xargs wc -l | tail -1`
+   - Engine test LoC: `find ~/alities-engine/Tests -name '*.swift' | xargs wc -l | tail -1`
+   - Studio source LoC: `find ~/alities-studio/src \( -name '*.ts' -o -name '*.tsx' \) ! -path '*__tests__*' | xargs wc -l | tail -1`
+   - Studio test LoC: `find ~/alities-studio/src -path '*__tests__*' \( -name '*.ts' -o -name '*.tsx' \) 2>/dev/null | xargs wc -l 2>/dev/null | tail -1`
+   - Mobile source LoC: `find ~/alities-mobile -path '*/Sources/*.swift' | xargs wc -l | tail -1`
+   - Mobile test LoC: `find ~/alities-mobile -path '*/Tests/*.swift' | xargs wc -l | tail -1`
+   - Git status for each repo: `git -C ~/alities status --porcelain`, `git -C ~/alities-engine status --porcelain`, `git -C ~/alities-studio status --porcelain`, `git -C ~/alities-mobile status --porcelain`
 
-2. **Parse the output** and present as markdown. Format numbers with commas.
+2. **List available skills**: Read file names from `~/alities/.claude/commands/` and the first line of each.
 
-3. **Output format:**
+3. **Get test counts** from `~/alities/CLAUDE.md` (the Test Suites table).
+
+4. **Output format:**
 
 **Working directory:** `/path/to/dir` (branch: `main`)
 
@@ -25,4 +32,4 @@ echo "CWD:$(pwd):$(git branch --show-current 2>/dev/null || echo 'no-git')" && e
 |-------|-------------|
 | `/skill-name` | First line of skill file |
 
-4. **Get test counts** from each repo's CLAUDE.md (use Grep, search for test count in parentheses — do this in parallel with step 1 if possible, or read from memory).
+Format numbers with commas.

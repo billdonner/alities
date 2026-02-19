@@ -3,9 +3,9 @@ Run all 3 Alities test suites in parallel and report results.
 ## Steps
 
 1. Launch these 3 test commands in parallel using the Task tool or parallel Bash calls:
-   - `cd ~/alities-engine && uv run pytest`
+   - `cd ~/alities-engine && swift test`
    - `cd ~/alities-studio && npx vitest run`
-   - `cd ~/alities-mobile && xcodebuild test -project Alities.xcodeproj -scheme Alities -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5'`
+   - `cd ~/alities-mobile && swift test`
 
 2. Wait for all 3 to complete.
 

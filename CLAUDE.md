@@ -25,7 +25,7 @@ There is NO runnable code in this repo. All executable work happens in the satel
 ## Workflow
 
 - **Be autonomous.** When given multiple tasks, do them all without pausing to ask.
-- **Chain operations.** Run tests across all repos, commit, push, regenerate openapi — do it all in one flow.
+- **Chain operations.** Run tests across all repos, commit, push, check sync — do it all in one flow.
 - **Show results as tables.** Summaries, checklists, and gap analyses should use markdown tables.
 - **Keep docs in sync with code.** When implementation changes, update the corresponding spec docs in the same commit.
 - **On session start**, print the current working directory and all associated repos in the ecosystem as a table.
@@ -41,15 +41,17 @@ There is NO runnable code in this repo. All executable work happens in the satel
 
 ## Cross-Project Sync
 
-After any API or model change in alities-engine:
-1. Regenerate openapi.json and copy to alities-studio
-2. Regenerate TypeScript client: `cd ~/alities-studio && npm run api:generate`
-3. Update alities-studio UI if affected
-4. Update alities-mobile models/APIEndpoint if affected
-5. Run xcodegen if new Swift files were added: `cd ~/alities-mobile && xcodegen generate`
+The engine is CLI-first with no OpenAPI spec generation. Sync is done by comparing source code directly.
 
-After any change that touches models, API calls, or shared behavior:
+After any model or data format change in alities-engine:
+1. Check studio's `src/` for model structs or data format assumptions that may need updating
+2. Check mobile's model structs (e.g., `GameModels.swift`) for field drift against engine models in `Sources/AlitiesEngine/Models/`
+3. Update alities-studio UI if affected
+4. Update alities-mobile models if affected
+
+After any change that touches models, exported data formats, or shared behavior:
 - Always check if the other two repos need matching updates
+- Use `/sync-api` to automate drift detection
 
 ## Custom Skills (Slash Commands)
 
@@ -58,7 +60,7 @@ Available when working from `~/alities`:
 | Skill | What it does |
 |-------|-------------|
 | `/test-all` | Run all 3 test suites in parallel, report results table |
-| `/sync-api` | Regenerate openapi.json → TS client, check iOS model drift |
+| `/sync-api` | Check API & model drift across all 3 repos |
 | `/gap-check` | Compare specs in `Docs/` vs implementations across all repos |
 | `/ship` | Test all → commit dirty repos → push everything |
 

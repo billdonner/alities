@@ -47,3 +47,4 @@ Alities is a trivia-based design and development environment that generates a va
 - Support 1000 concurrent players
 - All data exportable (GDPR/CCPA)
 - Content moderation pipeline for user-submitted questions
+- Data retention and deletion controls for player data (GDPR right to erasure)

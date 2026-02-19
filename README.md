@@ -11,7 +11,7 @@ Alities is a platform where creators design trivia game templates and topic pack
 | Repo | Stack | Purpose |
 |------|-------|---------|
 | [alities](https://github.com/billdonner/alities) | Docs | Specs, documentation, orchestration hub |
-| [alities-engine](https://github.com/billdonner/alities-engine) | Python / FastAPI | Game engine & API server |
+| [alities-engine](https://github.com/billdonner/alities-engine) | Swift / SPM | Trivia content engine & daemon |
 | [alities-studio](https://github.com/billdonner/alities-studio) | React / TypeScript | Game designer & player web app |
 | [alities-mobile](https://github.com/billdonner/alities-mobile) | SwiftUI / iOS | Mobile game player |
 

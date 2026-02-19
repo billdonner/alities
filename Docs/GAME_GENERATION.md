@@ -10,12 +10,15 @@ The generation service combines a game template with one or more topic packs to 
 {
   "template_id": "uuid",
   "topic_pack_ids": ["uuid", "uuid"],
+  "player_id": "uuid (optional)",
   "config_overrides": {
     "questions_per_game": 15
   },
   "seed": 42
 }
 ```
+
+- `player_id` is optional. When provided, the "recently seen" filter in step 2 uses this player's history. When omitted, the history filter step is skipped.
 
 ## Question Selection Algorithm
 
@@ -28,7 +31,7 @@ The generation service combines a game template with one or more topic packs to 
 
 ## Deterministic Seeding
 
-- If a `seed` is provided, the same inputs always produce the same game
+- If a `seed` is provided, the same inputs (including the player's history snapshot at generation time, if `player_id` is given) always produce the same game
 - Used for daily challenges (seed = date) and competitive modes (all players get same questions)
 - If no seed is provided, a random one is generated and stored with the instance
 

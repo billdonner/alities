@@ -5,7 +5,7 @@ Compare specs in Docs/ against actual implementations across all 3 Alities repos
 1. Read `~/alities/Docs/CATALOG.md` to get the list of all spec documents and feature areas.
 
 2. For each spec area, check whether it is implemented in:
-   - **Engine**: Look in `~/alities-engine/src/` for routers, models, and services
+   - **Engine**: Look in `~/alities-engine/Sources/AlitiesEngine/` for commands, models, and services
    - **Studio**: Look in `~/alities-studio/src/` for components, pages, and API calls
    - **Mobile**: Look in `~/alities-mobile/Alities/` for views, models, and services
 

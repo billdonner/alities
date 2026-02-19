@@ -134,14 +134,15 @@ Install engine globally: `cp .build/release/AlitiesEngine ~/bin/alities-engine`
 
 ## Cross-Project Sync Rules
 
-The engine is the API source of truth. After any API or model change in alities-engine:
+The engine is CLI-first with no OpenAPI spec generation. Sync is done by comparing source code directly.
 
-1. Regenerate `openapi.json` and copy to alities-studio
-2. Regenerate TypeScript client: `cd ~/alities-studio && npm run api:generate`
+After any model or data format change in alities-engine:
+1. Check studio's `src/` for model structs or data format assumptions that may need updating
+2. Check mobile's model structs (e.g., `GameModels.swift`) for field drift against engine models in `Sources/AlitiesEngine/Models/`
 3. Update alities-studio UI if affected
 4. Update alities-mobile models if affected
 
-After any change touching models, API calls, or shared behavior — check all three repos.
+After any change touching models, exported data formats, or shared behavior — check all three repos.
 
 ## Provenance
 
