@@ -25,4 +25,5 @@ Master index of all spec and design documents.
 
 | Document | Description |
 |----------|-------------|
-| [CODE_REVIEW_2026-02-19.md](CODE_REVIEW_2026-02-19.md) | Comprehensive ecosystem review |
+| [CODE_REVIEW_2026-02-19.md](CODE_REVIEW_2026-02-19.md) | Initial ecosystem review — identified Python/FastAPI doc drift |
+| [CODE_REVIEW_2026-02-18.md](CODE_REVIEW_2026-02-18.md) | Comprehensive top-to-bottom review — all source files in all repos |
