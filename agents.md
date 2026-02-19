@@ -116,6 +116,7 @@ Port file written to `/tmp/alities-engine.port` for CLI auto-discovery.
 | Variable | Default | Required By |
 |----------|---------|-------------|
 | `OPENAI_API_KEY` | — | Engine (AI provider) |
+| `CONTROL_API_KEY` | — | Engine (Bearer token for POST endpoints; optional) |
 | `DB_HOST` | localhost | Engine (PostgreSQL) |
 | `DB_PORT` | 5432 | Engine (PostgreSQL) |
 | `DB_USER` | trivia | Engine (PostgreSQL) |

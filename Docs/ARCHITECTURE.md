@@ -29,29 +29,39 @@
          └─────────┘  └─────────┘
 ```
 
-The engine is a **CLI-first** tool. The daemon mode runs a background acquisition loop with a lightweight NIO HTTP control server on port 9847 (localhost only). Studio and mobile consume exported game data files — they do not call the engine's HTTP endpoints directly.
+The engine is a **CLI-first** tool. The daemon mode runs a background acquisition loop with a lightweight NIO HTTP control server on port 9847 (localhost only, CORS enabled). Studio and mobile call the daemon's HTTP endpoints directly (`/status`, `/categories`, `/gamedata`) and can also load exported JSON files offline.
 
 ## Data Model
 
-### Core Entities
+### Implemented Entities
 
 | Entity | Description | Key Fields |
 |--------|-------------|------------|
-| **GameTemplate** | Reusable game format definition | id, name, format_type, rules_config, created_by |
-| **TopicPack** | Collection of trivia questions | id, name, category, version, question_count, created_by |
-| **Question** | Single trivia question | id, topic_pack_id, text, correct_answer, wrong_answers[], difficulty, tags[] |
-| **GameInstance** | A generated playable game | id, template_id, topic_pack_ids[], seed, status, config |
-| **GameSession** | A player's play-through of a game instance | id, game_instance_id, player_id, score, started_at, completed_at |
-| **Player** | A user who plays games | id, display_name, email, stats |
-| **Creator** | A user who designs templates/packs | id, display_name, email, published_count |
+| **TriviaQuestion** | Core question model (engine) | text, choices[], correctChoiceIndex, category, difficulty (easy/medium/hard), explanation?, hint?, source |
+| **Challenge** | Exported question for players (engine/studio/mobile) | id, topic, pic (SF Symbol), question, answers[], correct, explanation, hint, aisource, date |
+| **GameDataOutput** | Exported game data bundle (engine/studio/mobile) | id, generated (timestamp), challenges[] |
+| **Category** | Category with SF Symbol (engine) | id, name, pic, count |
 
-### Relationships
+### Planned Entities (not yet implemented)
+
+> See feature specs in `Docs/` for the target design of these entities.
+
+| Entity | Description |
+|--------|-------------|
+| **GameTemplate** | Reusable game format definition (quiz show, flashcard, bracket, etc.) |
+| **TopicPack** | Versioned collection of trivia questions |
+| **GameInstance** | A generated playable game combining template + topic packs |
+| **GameSession** | A player's play-through of a game instance |
+| **Player** | A user who plays games |
+| **Creator** | A user who designs templates/packs |
+
+### Current Data Flow
 
 ```
-Creator ──creates──> GameTemplate
-Creator ──creates──> TopicPack ──contains──> Question[]
-GameTemplate + TopicPack[] ──generates──> GameInstance
-Player ──plays──> GameSession ──of──> GameInstance
+Providers ──fetch──> TriviaQuestion[] ──store──> PostgreSQL / SQLite
+SQLite ──export──> GameDataOutput (Challenge[])
+Daemon /gamedata ──serve──> Mobile app
+Daemon /categories ──serve──> Studio + Mobile
 ```
 
 ## Service Boundaries
@@ -68,9 +78,11 @@ Player ──plays──> GameSession ──of──> GameInstance
 
 The engine is **CLI-first**. The primary interface is CLI subcommands (`run`, `import`, `export`, `report`, `stats`, `categories`, etc.).
 
-In daemon mode (`run`), an internal NIO HTTP control server listens on `127.0.0.1:9847` with operational endpoints (`/status`, `/harvest`, `/pause`, `/resume`, `/stop`, `/import`, `/categories`). These are for daemon control only, not for serving game content to clients.
+In daemon mode (`run`), an internal NIO HTTP control server listens on `127.0.0.1:9847` with:
+- **Public GET endpoints**: `/health`, `/status`, `/categories`, `/gamedata` — used by studio and mobile clients
+- **Protected POST endpoints**: `/harvest`, `/pause`, `/resume`, `/stop`, `/import` — for daemon control (Bearer token auth via `CONTROL_API_KEY`)
 
-Studio and mobile consume **exported JSON files** (GameData format), not live API calls. Cross-project sync is done by comparing model structs and data formats in source code — there is no OpenAPI spec generation.
+Cross-project sync is done by comparing model structs and data formats in source code — there is no OpenAPI spec generation. See [API_SURFACE.md](API_SURFACE.md) for the full endpoint inventory.
 
 ## Tech Stack
 

@@ -1,5 +1,7 @@
 # Alities — Requirements
 
+> **Status: PARTIAL** — The engine's trivia acquisition, storage, and export pipeline is implemented. Game templates, game generation, scoring, leaderboards, multiplayer, and content moderation are planned but not yet built.
+
 ## Vision
 
 Alities is a trivia-based design and development environment that generates a variety of games. Creators design game templates and curate topic packs; the engine combines them into playable game instances.

@@ -1,5 +1,7 @@
 # Alities — Game Generation Spec (v1.0)
 
+> **Status: PLANNED** — This spec describes the target design. The generation algorithm is not yet implemented. Currently, alities-engine exports all questions as flat GameData JSON; no template-based selection, balancing, or deterministic seeding is performed.
+
 ## Overview
 
 The generation service combines a game template with one or more topic packs to produce a playable game instance. The algorithm selects and orders questions based on the template's rules.

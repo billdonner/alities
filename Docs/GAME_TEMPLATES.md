@@ -1,5 +1,7 @@
 # Alities — Game Templates Spec (v1.0)
 
+> **Status: PLANNED** — This spec describes the target design. The template system is not yet implemented in alities-engine, alities-studio, or alities-mobile. Current engine functionality is limited to trivia question acquisition, storage, and export.
+
 ## Overview
 
 Game templates define reusable game formats. A template specifies the rules, scoring, UI layout hints, and progression logic — but contains no trivia content. Content comes from topic packs at generation time.

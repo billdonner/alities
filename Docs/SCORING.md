@@ -1,5 +1,7 @@
 # Alities — Scoring Spec (v1.0)
 
+> **Status: PLANNED** — This spec describes the target design. Speed bonus, streak multipliers, hint penalties, leaderboards, and player statistics are not yet implemented. The mobile app currently uses simple correct-answer counting.
+
 ## Overview
 
 Scoring rewards correct answers, speed, and consistency. Templates configure the base values; the engine computes final scores during gameplay.
