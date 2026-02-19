@@ -34,10 +34,10 @@ There is NO runnable code in this repo. All executable work happens in the satel
 
 | Repo | Tests | Command |
 |------|-------|---------|
-| alities-engine | 0 | `cd ~/alities-engine && swift test` |
+| alities-engine | 74 | `cd ~/alities-engine && swift test` |
 | alities-studio | 0 | `cd ~/alities-studio && npx vitest run` |
 | alities-mobile | 0 | `cd ~/alities-mobile && xcodebuild test -project Alities.xcodeproj -scheme Alities -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max,OS=18.5'` |
-| **Total** | **0** | |
+| **Total** | **74** | |
 
 ## Cross-Project Sync
 
