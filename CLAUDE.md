@@ -35,9 +35,9 @@ There is NO runnable code in this repo. All executable work happens in the satel
 | Repo | Tests | Command |
 |------|-------|---------|
 | alities-engine | 101 | `cd ~/alities-engine && swift test` |
-| alities-studio | 5 | `cd ~/alities-studio && npx vitest run` |
+| alities-studio | 4 | `cd ~/alities-studio && npx vitest run` |
 | alities-mobile | 19 | `cd ~/alities-mobile && swift test` |
-| **Total** | **125** | |
+| **Total** | **124** | |
 
 ## Cross-Project Sync
 
