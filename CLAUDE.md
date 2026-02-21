@@ -11,6 +11,7 @@ Alities is a trivia-based design and development environment that generates a va
 | **alities-studio** | `~/alities-studio` | React/TypeScript game designer & player web app |
 | **alities-mobile** | `~/alities-mobile` | SwiftUI iOS game player app |
 | **alities-trivwalk** | `~/alities-trivwalk` | Python TrivWalk trivia walking game |
+| **adveyes** | `~/adveyes` | Python FastAPI multi-tenant advice backend (Claude) |
 
 There is NO runnable code in this repo. All executable work happens in the satellite repos.
 
