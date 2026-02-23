@@ -31,8 +31,8 @@ After any model or data format change in alities-engine:
 |------|-------|---------|
 | alities-engine | 82 | `cd ~/alities-engine && swift test` |
 | alities-studio | 27 | `cd ~/alities-studio && npx vitest run` |
-| alities-mobile | 36 | `cd ~/alities-mobile && swift test` |
-| **Total** | **145** | |
+| alities-mobile | 37 | `cd ~/alities-mobile && swift test` |
+| **Total** | **146** | |
 
 ## Custom Skills (Slash Commands)
 
