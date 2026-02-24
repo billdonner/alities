@@ -10,16 +10,15 @@ The engine is a **CLI-first** tool. The primary interface is CLI subcommands (se
 |---------|-------------|
 | `run` | Start acquisition daemon (dual-write: file + PostgreSQL) |
 | `list-providers` | Show available trivia providers |
-| `status` | Show daemon status |
-| `gen-import` | Import file directly to PostgreSQL |
-| `import` | Import JSON files to SQLite (with dedup) |
-| `export` | Export from SQLite as raw or gamedata JSON |
-| `report` | Profile trivia data (from files or SQLite) |
-| `stats` | Quick database summary (default command) |
-| `categories` | List categories with counts and aliases |
+| `stats` | Quick PostgreSQL database summary (default command) |
+| `categories` | List categories with counts from PostgreSQL |
+| `report` | Profile trivia data from JSON files (text or JSON output) |
+| `gen-import` | Import JSON file directly to PostgreSQL (with dedup) |
 | `harvest` | Request targeted AI generation from running daemon |
 | `ctl` | Control running daemon (status/pause/resume/stop/import/categories) |
-| `migrate` | Migrate SQLite questions to PostgreSQL |
+| `import` | Import JSON files to SQLite (planned — requires GRDB) |
+| `export` | Export from SQLite as raw or gamedata JSON (planned — requires GRDB) |
+| `migrate` | Migrate SQLite questions to PostgreSQL (planned — requires GRDB) |
 
 ## Daemon Control Endpoints
 
@@ -35,6 +34,7 @@ Port file written to `/tmp/alities-engine.port` for CLI auto-discovery.
 | GET | `/status` | Daemon stats (uptime, question count, provider status) |
 | GET | `/categories` | List categories with counts and SF Symbol names |
 | GET | `/gamedata` | Full GameDataOutput JSON (all challenges for players) |
+| GET | `/metrics` | Structured monitoring data for server-monitor (daemon state, memory, per-provider stats, Postgres counts) |
 
 ### Protected Endpoints (Bearer token)
 
@@ -54,13 +54,23 @@ Port file written to `/tmp/alities-engine.port` for CLI auto-discovery.
 - GET endpoints are always public (no auth required)
 - Returns `401 Unauthorized` if token is missing or invalid
 
+## Static File Serving
+
+When launched with `--static-dir <path>`, the daemon serves static files from the specified directory. This is used to host the alities-studio web build directly from the engine.
+
+- SPA fallback: requests without file extensions serve `index.html`
+- Directory traversal (`..`) is rejected
+- Common MIME types: HTML, JS, CSS, SVG, JSON, images, fonts
+- Static routes are lowest priority (API endpoints take precedence)
+
 ## Client Usage
 
 Both alities-studio and alities-mobile call the daemon's HTTP endpoints directly:
 
 | Client | Endpoints Used |
 |--------|---------------|
-| alities-studio | `GET /status`, `GET /categories` |
+| alities-studio | `GET /status`, `GET /categories`, `GET /gamedata` |
 | alities-mobile | `GET /status`, `GET /categories`, `GET /gamedata` |
+| server-monitor | `GET /metrics` |
 
 CORS headers are included on all responses for studio web app compatibility.

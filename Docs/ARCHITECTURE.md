@@ -69,7 +69,7 @@ Daemon /categories ──serve──> Studio + Mobile
 | Module | Location | Responsibility |
 |--------|----------|---------------|
 | **Commands/** | `Sources/AlitiesEngine/Commands/` | CLI subcommands (run, import, export, report, stats, etc.) |
-| **Services/** | `Sources/AlitiesEngine/Services/` | Daemon, PostgreSQL ops, control server, game data transformer |
+| **Services/** | `Sources/AlitiesEngine/Services/` | Daemon, PostgreSQL ops, control server, game data transformer, similarity detection |
 | **Providers/** | `Sources/AlitiesEngine/Providers/` | Trivia acquisition from 5 sources (OpenTriviaDB, TheTriviaAPI, jService, AI Generator, File Import) |
 | **Profile/** | `Sources/AlitiesEngine/Profile/` | SQLite/GRDB operations, category normalization |
 | **Models/** | `Sources/AlitiesEngine/Models/` | TriviaQuestion, GameData, ProfileModels, Report |
@@ -83,6 +83,16 @@ In daemon mode (`run`), an internal NIO HTTP control server listens on `127.0.0.
 - **Protected POST endpoints**: `/harvest`, `/pause`, `/resume`, `/stop`, `/import` — for daemon control (Bearer token auth via `CONTROL_API_KEY`)
 
 Cross-project sync is done by comparing model structs and data formats in source code — there is no OpenAPI spec generation. See [API_SURFACE.md](API_SURFACE.md) for the full endpoint inventory.
+
+## Duplicate Detection
+
+`SimilarityService` (actor) detects duplicate/near-duplicate questions during acquisition:
+
+1. **Signature check** — fast exact-match on normalized text
+2. **Text similarity** — Jaccard coefficient on word sets (threshold: 0.85)
+3. **AI similarity** — OpenAI GPT-4o-mini semantic comparison (threshold: 0.8)
+
+Maintains an in-memory LRU cache of up to 10,000 question signatures for fast lookup during daemon runs.
 
 ## Tech Stack
 
