@@ -7,21 +7,22 @@ Alities is a trivia-based design and development environment that generates a va
 | Repo | Path | Purpose |
 |------|------|---------|
 | **alities** | `~/alities` | Specs, documentation, orchestration hub |
-| **alities-engine** | `~/alities-engine` | Swift trivia content engine (gen-daemon + profile, source of truth) |
+| **card-engine** | `~/card-engine` | Unified FastAPI backend (trivia content + ingestion daemon) |
 | **alities-studio** | `~/alities-studio` | React/TypeScript game designer & player web app |
 | **alities-mobile** | `~/alities-mobile` | SwiftUI iOS game player app |
 | **alities-trivwalk** | `~/alities-trivwalk` | Python TrivWalk trivia walking game |
 | **adveyes** | `~/adveyes` | Python FastAPI multi-tenant advice backend (Claude) |
+| ~~alities-engine~~ | `~/alities-engine` | Retired — ingestion pipeline ported to card-engine |
 
 There is NO runnable code in this repo. All executable work happens in the satellite repos.
 
 ## Cross-Project Sync
 
-The engine is CLI-first with no OpenAPI spec generation. Sync is done by comparing source code directly.
+Trivia content is served by card-engine (`/api/v1/trivia/*`). Ingestion is controlled via `/api/v1/ingestion/*`.
 
-After any model or data format change in alities-engine:
+After any API or model change in card-engine:
 1. Check studio's `src/` for model structs or data format assumptions that may need updating
-2. Check mobile's model structs (e.g., `GameModels.swift`) for field drift against engine models in `Sources/AlitiesEngine/Models/`
+2. Check mobile's model structs (e.g., `GameModels.swift`) for field drift
 3. Update alities-studio UI if affected
 4. Update alities-mobile models if affected
 
@@ -29,10 +30,9 @@ After any model or data format change in alities-engine:
 
 | Repo | Tests | Command |
 |------|-------|---------|
-| alities-engine | 82 | `cd ~/alities-engine && swift test` |
 | alities-studio | 27 | `cd ~/alities-studio && npx vitest run` |
 | alities-mobile | 37 | `cd ~/alities-mobile && swift test` |
-| **Total** | **146** | |
+| **Total** | **64** | |
 
 ## Custom Skills (Slash Commands)
 
@@ -40,8 +40,8 @@ Available when working from `~/alities`:
 
 | Skill | What it does |
 |-------|-------------|
-| `/test-all` | Run all 3 test suites in parallel, report results table |
-| `/sync-api` | Check API & model drift across all 3 repos |
+| `/test-all` | Run all test suites in parallel, report results table |
+| `/sync-api` | Check API & model drift across repos |
 | `/gap-check` | Compare specs in `Docs/` vs implementations across all repos |
 | `/ship` | Test all → commit dirty repos → push everything |
 
@@ -53,4 +53,4 @@ Skills live in `~/alities/.claude/commands/`.
 - **Topic Pack** — a curated set of trivia questions for a specific subject area
 - **Game Instance** — a generated playable game combining a template + topic pack(s) + configuration
 - **Studio** — the web-based designer where creators build and preview games
-- **Engine** — the backend that stores templates, manages topic packs, generates game instances, and scores gameplay
+- **card-engine** — the backend that stores content, generates trivia via OpenAI, and serves game data
